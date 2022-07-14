@@ -1,9 +1,12 @@
-const { port } = require("../config");
-const app = require("./routes");
-const { connectDb } = require("../db");
-require("../services/node-cron");
 
-let listener;
+import { port } from '../config';
+import app from './routes';
+import { connectDb } from '../db'
+
+import "../services/node-cron";
+import { Server } from 'http';
+
+let listener: Server;
 
 async function start() {
   try {
@@ -30,7 +33,7 @@ function stop() {
   });
 }
 
-module.exports = {
+export {
   start,
   stop,
 };

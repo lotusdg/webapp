@@ -1,7 +1,4 @@
-function fatal(message) {
-  console.error(message);
-  process.exit(1);
-}
+import { Response } from "express";
 
 const httpCodes = {
   ok: 200,
@@ -13,12 +10,11 @@ const httpCodes = {
   notImplemented: 501,
 };
 
-function resFinish(res, code, message) {
+function resFinish(res: Response, code: number, message: object) {
   res.status(code).json(message);
 }
 
-module.exports = {
-  fatal,
+export {
   httpCodes,
   resFinish,
 };

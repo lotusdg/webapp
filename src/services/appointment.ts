@@ -1,9 +1,11 @@
-const { resFinish, httpCodes } = require("../utils");
-const Appointment = require("../db/models/appointment");
-const User = require("../db/models/user");
-const Doctor = require("../db/models/doctor");
+import { httpCodes, resFinish } from '../utils'; 
+import Appointment from '../db/models/appointment';
+import User from '../db/models/user';
+import Doctor from '../db/models/doctor';
+import { Request, Response } from 'express';
+import { formsErrorMessage } from './helpers';
 
-async function createAppointment(req, res) {
+async function createAppointment(req: Request, res: Response) {
   try {
     const { userId, doctorId, date } = req.body;
 
@@ -11,10 +13,10 @@ async function createAppointment(req, res) {
       throw new Error("req.body had not pass the validation.");
     }
 
-    const appointmentDate = new Date(new Date(date).setSeconds(00, 000));
+    const appointmentDate = new Date(new Date(date).setSeconds(0, 0));
     const newDate = new Date(date);
-    const dateBetween = new Date(newDate.setHours(00, 00, 000));
-    const dateEnd = new Date(newDate.setHours(24, 00, 00, 000));
+    const dateBetween = new Date(newDate.setHours(0, 0, 0));
+    const dateEnd = new Date(newDate.setHours(24, 0, 0, 0));
 
     const docAppointments = await Appointment.find({
       doctor: doctorId,
@@ -42,14 +44,14 @@ async function createAppointment(req, res) {
 
     return resFinish(res, httpCodes.ok, { success: true });
   } catch (err) {
-    console.error(err);
-    return resFinish(res, httpCodes.badReq, { error: err.message || err });
+    const message = await formsErrorMessage(err);
+    return resFinish(res, httpCodes.badReq, { error: message });
   }
 }
 
-async function getAllAppointments(req, res) {
+async function getAllAppointments(req: Request, res: Response) {
   try {
-    let filter = {};
+    let filter: any = {};
     if (req.query.date) filter.date = req.query.date;
     if (req.query.user) filter.user = req.query.user;
     if (req.query.doctor) filter.doctor = req.query.doctor;
@@ -60,12 +62,12 @@ async function getAllAppointments(req, res) {
 
     return resFinish(res, httpCodes.ok, appointments);
   } catch (err) {
-    console.error(err);
-    return resFinish(res, httpCodes.badReq, { error: err.message || err });
+    const message = await formsErrorMessage(err);
+    return resFinish(res, httpCodes.badReq, { error: message });
   }
 }
 
-async function acceptAppointment(req, res) {
+async function acceptAppointment(req: Request, res: Response) {
   try {
     const appointmentId = req.params.id;
     const { doctorId, userId } = req.body;
@@ -109,12 +111,12 @@ async function acceptAppointment(req, res) {
 
     return resFinish(res, httpCodes.ok, { success: true });
   } catch (err) {
-    console.error(err);
-    return resFinish(res, httpCodes.badReq, { error: err.message || err });
+    const message = await formsErrorMessage(err);
+    return resFinish(res, httpCodes.badReq, { error: message });
   }
 }
 
-async function rejectAppointment(req, res) {
+async function rejectAppointment(req: Request, res: Response) {
   try {
     const appointmentId = req.params.id;
     const { doctorId, userId } = req.body;
@@ -137,12 +139,12 @@ async function rejectAppointment(req, res) {
 
     return resFinish(res, httpCodes.ok, { success: true });
   } catch (err) {
-    console.error(err);
-    return resFinish(res, httpCodes.badReq, { error: err.message || err });
+    const message = await formsErrorMessage(err);
+    return resFinish(res, httpCodes.badReq, { error: message });
   }
 }
 
-module.exports = {
+export = {
   createAppointment,
   getAllAppointments,
   acceptAppointment,

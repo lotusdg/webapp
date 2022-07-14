@@ -1,15 +1,15 @@
-const cron = require("node-cron");
-const fs = require("fs");
-const Appointment = require("../db/models/appointment");
-const User = require("../db/models/user");
-const Doctor = require("../db/models/doctor");
+import cron from 'node-cron';
+import fs from 'fs';
+import Appointment from '../db/models/appointment';
+import User from '../db/models/user';
+import Doctor from '../db/models/doctor';
 
-async function job(hours) {
+async function job(hours: number) {
   try {
     const currentDate = new Date();
     const date = new Date();
     const findDate = new Date(
-      date.setHours(date.getHours() + hours, date.getMinutes(), 00, 000)
+      date.setHours(date.getHours() + hours, date.getMinutes(), 0, 0)
     );
 
     const appointments = await Appointment.find({
@@ -26,16 +26,16 @@ async function job(hours) {
         if (hours === 2) {
           message =
             `${currentDate.toLocaleString()} | Привет ` +
-            user.name +
+            user!.name +
             "! Вам через 2 часа к " +
-            doctor.spec +
+            doctor!.spec +
             ` в ${findDate.toLocaleTimeString()}!`;
         } else {
           message =
             `${currentDate.toLocaleString()} | Привет ` +
-            user.name +
+            user!.name +
             "! Напоминаем что вы записаны к " +
-            doctor.spec +
+            doctor!.spec +
             ` завтра в ${findDate.toLocaleTimeString()}!`;
         }
         console.log(message);
@@ -52,4 +52,4 @@ cron.schedule("* * * * *", async () => {
   job(24);
 });
 
-module.export = cron;
+export = cron;

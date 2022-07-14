@@ -1,7 +1,7 @@
-const app = require("./app");
+import * as app from './app';
 
 function enableGracefulExit() {
-  const exitHandler = (err) => {
+  const exitHandler = (err: Error) => {
     if (err) {
       console.error(err);
     }
